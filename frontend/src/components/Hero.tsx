@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Mail, ArrowRight, Code, Palette, ChevronDown, FileText } from 'lucide-react';
+import { Mail, ArrowRight, Code, Palette, ChevronDown, FileText, Calendar } from 'lucide-react';
 import { Github, Linkedin, Twitter, Facebook, Instagram } from './SocialIcons';
 import { portfolioConfig } from '../config/portfolio';
 
@@ -84,11 +84,23 @@ export default function Hero() {
             >
               View My Work <ArrowRight size={18} />
             </a>
+            {portfolioConfig.contact.calendlyUrl && (
+              <a
+                href={portfolioConfig.contact.calendlyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-indigo-500/30 dark:border-indigo-500/20 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-heading font-medium hover:bg-indigo-500/20 hover:border-indigo-500 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg shadow-indigo-500/10 relative overflow-hidden group"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse mr-0.5" />
+                Book a Call <Calendar size={18} className="ml-1" />
+              </a>
+            )}
             <a
               href="#contact"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-slate-200 dark:border-white/5 bg-transparent text-slate-900 dark:text-white font-heading font-medium hover:bg-indigo-500/5 hover:border-indigo-500 transition-all duration-200"
             >
-              Get In Touch
+              Let&apos;s Talk
             </a>
             {portfolioConfig.contact.cvUrl && (
               <a

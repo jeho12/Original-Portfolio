@@ -44,7 +44,7 @@ export default function Navbar() {
   // Section observer for scroll spy
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['about', 'skills', 'experience', 'projects', 'contact'];
+      const sections = ['about', 'services', 'skills', 'experience', 'projects', 'blog', 'contact'];
       const scrollPosition = window.scrollY + 120;
 
       for (const section of sections) {
@@ -66,9 +66,11 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'About', href: '#about', id: 'about' },
+    { name: 'Services', href: '#services', id: 'services' },
     { name: 'Skills', href: '#skills', id: 'skills' },
     { name: 'Experience', href: '#experience', id: 'experience' },
     { name: 'Projects', href: '#projects', id: 'projects' },
+    { name: 'Blog', href: '#blog', id: 'blog' },
     { name: 'Contact', href: '#contact', id: 'contact' },
   ];
 

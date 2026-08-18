@@ -38,7 +38,7 @@ export default function Contact() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     let nameErr = false;
@@ -57,16 +57,32 @@ export default function Contact() {
     if (!nameErr && !emailErr && !msgErr) {
       setStatus('submitting');
       
-      const subject = encodeURIComponent(`Portfolio Inquiry from ${formData.name}`);
-      const body = encodeURIComponent(
-        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-      );
-      
-      window.location.href = `mailto:${portfolioConfig.contact.email}?subject=${subject}&body=${body}`;
-      
-      setStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-      setTimeout(() => setStatus('idle'), 5000);
+      try {
+        const response = await fetch(`${portfolioConfig.api.baseUrl}/api/messages`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+          }),
+        });
+
+        if (response.ok) {
+          setStatus('success');
+          setFormData({ name: '', email: '', message: '' });
+          setTimeout(() => setStatus('idle'), 5000);
+        } else {
+          setStatus('error');
+          setTimeout(() => setStatus('idle'), 5000);
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        setStatus('error');
+        setTimeout(() => setStatus('idle'), 5000);
+      }
     }
   };
 
@@ -90,48 +106,60 @@ export default function Contact() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-12">
-          {/* Info Card */}
-          <div className="glass-panel p-8 bg-white/40 dark:bg-slate-950/40 border border-slate-200/50 dark:border-white/5 shadow-md flex flex-col justify-between">
+          {/* Info Cards Stack */}
+          <div className="flex flex-col gap-6">
             <div>
               <h3 className="font-heading font-bold text-xl text-slate-900 dark:text-white mb-2">Contact Information</h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
+              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
                 Feel free to reach out to me for project inquiries, job opportunities, or just to say hello.
               </p>
+            </div>
 
-              <div className="flex flex-col gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
-                    <Mail size={18} />
-                  </div>
-                  <div>
-                    <h4 className="font-heading font-semibold text-sm text-slate-900 dark:text-white mb-0.5">Email</h4>
-                    <a href={`mailto:${portfolioConfig.contact.email}`} className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors">
-                      {portfolioConfig.contact.email}
-                    </a>
-                  </div>
-                </div>
+            {/* Email Card */}
+            <a
+              href={`mailto:${portfolioConfig.contact.email}`}
+              className="glass-panel group p-5 bg-white/40 dark:bg-slate-950/40 border border-slate-200/50 dark:border-white/5 shadow-md hover:-translate-y-1 hover:border-indigo-500/20 hover:shadow-lg transition-all duration-300 flex items-center gap-5 cursor-pointer relative overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-500 transform origin-bottom scale-y-0 group-hover:scale-y-100 transition-transform duration-300" />
+              <div className="w-11 h-11 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <Mail size={18} />
+              </div>
+              <div>
+                <h4 className="font-heading font-bold text-sm text-slate-900 dark:text-white mb-0.5">Email</h4>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
+                  {portfolioConfig.contact.email}
+                </p>
+              </div>
+            </a>
 
-                <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
-                    <Phone size={18} />
-                  </div>
-                  <div>
-                    <h4 className="font-heading font-semibold text-sm text-slate-900 dark:text-white mb-0.5">Phone</h4>
-                    <a href={`tel:${portfolioConfig.contact.phoneDial}`} className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-500 transition-colors">
-                      {portfolioConfig.contact.phone}
-                    </a>
-                  </div>
-                </div>
+            {/* Phone Card */}
+            <a
+              href={`tel:${portfolioConfig.contact.phoneDial}`}
+              className="glass-panel group p-5 bg-white/40 dark:bg-slate-950/40 border border-slate-200/50 dark:border-white/5 shadow-md hover:-translate-y-1 hover:border-purple-500/20 hover:shadow-lg transition-all duration-300 flex items-center gap-5 cursor-pointer relative overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-1.5 h-full bg-purple-500 transform origin-bottom scale-y-0 group-hover:scale-y-100 transition-transform duration-300" />
+              <div className="w-11 h-11 rounded-lg bg-purple-500/10 text-purple-500 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <Phone size={18} />
+              </div>
+              <div>
+                <h4 className="font-heading font-bold text-sm text-slate-900 dark:text-white mb-0.5">Phone</h4>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors">
+                  {portfolioConfig.contact.phone}
+                </p>
+              </div>
+            </a>
 
-                <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
-                    <MapPin size={18} />
-                  </div>
-                  <div>
-                    <h4 className="font-heading font-semibold text-sm text-slate-900 dark:text-white mb-0.5">Location</h4>
-                    <span className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">{portfolioConfig.contact.location}</span>
-                  </div>
-                </div>
+            {/* Location Card */}
+            <div className="glass-panel group p-5 bg-white/40 dark:bg-slate-950/40 border border-slate-200/50 dark:border-white/5 shadow-md hover:-translate-y-1 hover:border-pink-500/20 hover:shadow-lg transition-all duration-300 flex items-center gap-5 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-1.5 h-full bg-pink-500 transform origin-bottom scale-y-0 group-hover:scale-y-100 transition-transform duration-300" />
+              <div className="w-11 h-11 rounded-lg bg-pink-500/10 text-pink-500 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <MapPin size={18} />
+              </div>
+              <div>
+                <h4 className="font-heading font-bold text-sm text-slate-900 dark:text-white mb-0.5">Location</h4>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                  {portfolioConfig.contact.location}
+                </p>
               </div>
             </div>
           </div>
@@ -199,7 +227,7 @@ export default function Contact() {
                   disabled={status === 'submitting'}
                   className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-heading font-medium hover:scale-[1.01] active:scale-95 disabled:opacity-75 disabled:pointer-events-none transition-all duration-200 shadow-md shadow-indigo-500/20"
                 >
-                  {status === 'submitting' ? 'Opening Mail Client...' : 'Send Message'}
+                  {status === 'submitting' ? 'Sending Message...' : 'Send Message'}
                   <Send size={16} />
                 </button>
               </div>
@@ -207,6 +235,12 @@ export default function Contact() {
               {status === 'success' && (
                 <div className="p-3 text-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-sm">
                   Thank you! Your message has been sent successfully.
+                </div>
+              )}
+
+              {status === 'error' && (
+                <div className="p-3 text-center rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 text-sm">
+                  Something went wrong. Please try again later.
                 </div>
               )}
             </form>

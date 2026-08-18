@@ -8,6 +8,7 @@ export const portfolioConfig = {
     timezone: 'Africa/Lagos', // Developer's timezone for the live clock
     cvUrl: '/resume.pdf',
     profileImage: '/profile.jpg',
+    calendlyUrl: 'https://calendly.com/jehoibenye/30min',
   },
   socials: {
     github: 'https://github.com/jeho12',
@@ -18,6 +19,6 @@ export const portfolioConfig = {
     instagram: 'https://www.instagram.com/jehoshaphat_ibenye',
   },
   api: {
-    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000',
+    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001',
   }
 };
